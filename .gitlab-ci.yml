@@ -1,0 +1,42 @@
+image: docker-registry.linagora.com:5000/linshare-releases/linshare-dind:latest
+
+stages:
+  - build
+
+.build-docker-tpl: &build-docker-tpl
+  image: docker-registry.linagora.com:5000/linshare-releases/linshare-dind:latest
+  tags:
+    - docker
+  variables:
+      DOCKER_HOST: "tcp://docker-dind"
+  services:
+      - name: docker-registry.linagora.com:5000/linshare-releases/linshare-dind:latest
+        alias: docker-dind
+
+docker-build:
+  <<: *build-docker-tpl
+  stage: build
+  script:
+    - docker build .
+  except:
+    - master@linagora/lgs/linshare/saas/linshare-editor-onlyoffice-dockerfile
+    - /^maintenance-.*/@linagora/lgs/linshare/saas/linshare-editor-onlyoffice-dockerfile
+    - tags@linagora/lgs/linshare/saas/linshare-editor-onlyoffice-dockerfile
+
+docker-snapshot:
+  <<: *build-docker-tpl
+  stage: build
+  variables:
+      DOCKER_HOST: "tcp://docker-dind"
+      DOCKER_IMAGE_PRIVATE: "docker-registry.linagora.com:5000/linshare-snapshots/linshare-editor-onlyoffice"
+  script:
+    - docker-tag-computing.sh ${VERSION} docker-tag-and-push.env
+    - docker login -u ${REGISTRY_USER} -p ${REGISTRY_TOKEN} docker-registry.linagora.com:5000
+    - docker build . -t build:latest --build-arg VERSION="${VERSION}" --build-arg CHANNEL="${CHANNEL}"
+    - docker-tag-and-push.sh build:latest ${DOCKER_IMAGE_PRIVATE}
+    - docker logout docker-registry.linagora.com:5000
+  only:
+    - triggers
+  except:
+    variables:
+      - $SKIP_BUILD_DOCKER
