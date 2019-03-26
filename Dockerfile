@@ -1,4 +1,4 @@
-FROM node:11
+FROM node:10
 MAINTAINER LinShare <linshare@linagora.com>
 
 ARG VERSION="2.0.0-SNAPSHOT"
@@ -6,7 +6,7 @@ ARG CHANNEL="snapshots"
 
 ENV LINSHARE_VERSION=$VERSION
 
-ENV EDITOR_BACKEND_SAMPLE_URL="http://editor-backend.linshare.local"
+ENV BASE_URL="http://editor-onlyoffice.linshare.local"
 ENV LINSHARE_API_BASE_URL="http://backend.linshare.local/linshare/webservice/rest"
 ENV MONGODB_CONNECTION="mongodb://mongo.linshare.local/linshare-oo-editor"
 
