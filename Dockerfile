@@ -9,6 +9,10 @@ ENV LINSHARE_VERSION=$VERSION
 ENV BASE_URL="http://editor-onlyoffice.linshare.local"
 ENV LINSHARE_API_BASE_URL="http://backend.linshare.local/linshare/webservice/rest"
 ENV MONGODB_CONNECTION="mongodb://mongo.linshare.local/linshare-oo-editor"
+ENV DOCUMENT_SERVER_JWT_BROWSER_TOKEN_ENABLE="true"
+ENV DOCUMENT_SERVER_JWT_BROWSER_TOKEN_SECRET="secret"
+ENV DOCUMENT_SERVER_JWT_INCOMING_REQUEST_ENABLE="true"
+ENV DOCUMENT_SERVER_JWT_INCOMING_REQUEST_SECRET="secret"
 
 RUN apt-get update && apt-get install curl bzip2 -y && apt-get clean && \
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
